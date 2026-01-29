@@ -11,10 +11,10 @@ steps:
     tags: latest
     auto_tag: true
     mirror: mirror.woodpecker.svc.usmn1.internal:80
-    cache_repo: library/plugin-buildah-cache
+    cache_repo: library/plugin-buildah/cache
+  privileged: true
   backend_options:
     kubernetes:
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
-        privileged: true
