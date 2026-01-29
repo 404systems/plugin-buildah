@@ -1,4 +1,4 @@
-FROM golang AS builder
+FROM golang:1.25.5 AS builder
 WORKDIR /build
 ENV GOCACHE=/go-cache
 ENV GOMODCACHE=/gomod-cache
@@ -10,11 +10,12 @@ RUN --mount=type=cache,target=/go-cache --mount=type=cache,target=/gomod-cache g
 
 FROM quay.io/buildah/stable:v1.42
 
-ENV HOME=/tmp BUILDAH_LAYERS=true BUILDAH_ISOLATION=rootless \
-    PLUGIN_REGISTRIES_FILE=/tmp/registries.conf PLUGIN_AUTHS_FILE=/tmp/auths.json \
-    CI_WORKSPACE="/workspace" PLUGIN_CONTAINERFILE="Containerfile"
+ENV BUILDAH_LAYERS=true BUILDAH_ISOLATION="rootless" HOME="/tmp" \
+    PLUGIN_REGISTRIES_FILE="/tmp/registries.conf" PLUGIN_AUTHS_FILE="/tmp/auths.json"
 
-WORKDIR ${CI_WORKSPACE}
+WORKDIR /workspace
+
+VOLUME [ "/workspace" ]
 
 CMD [ "/plugin-buildah" ]
 
