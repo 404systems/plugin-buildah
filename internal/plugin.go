@@ -88,7 +88,7 @@ func (p *Plugin) Flags() []cli.Flag {
 			Destination: &p.Settings.Target,
 		},
 		&cli.BoolFlag{
-			Name:        "push.skip",
+			Name:        "skip.push",
 			Sources:     cli.EnvVars("PLUGIN_SKIP_PUSH"),
 			Destination: &p.Settings.SkipPush,
 		},
@@ -260,11 +260,6 @@ func (p *Plugin) Execute(ctx context.Context) error {
 
 	// push image
 
-	if p.Settings.SkipPush {
-		log.Info().Msg("skipping push")
-		return nil
-	}
-
 	for _, dest := range dests {
 		if err := p.pushImage(dest, authFileExists); err != nil {
 			return err
@@ -285,6 +280,11 @@ func (p *Plugin) pushImage(dest string, useAuthFile bool) error {
 	pushCmd.Args = append(pushCmd.Args, dest)
 
 	log.Info().Msg(fmt.Sprintf("push args: %s", strings.Join(pushCmd.Args, ", ")))
+
+	if p.Settings.SkipPush {
+		log.Info().Msg("skipping push")
+		return nil
+	}
 
 	pushCmd.Stdout = os.Stdout
 	pushCmd.Stderr = os.Stderr
