@@ -66,12 +66,12 @@ func (p *Plugin) Flags() []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "registries.file",
-			Sources:     cli.EnvVars("PLUGIN_REGISTRIES_FILE"),
+			Sources:     cli.EnvVars("REGISTRIES_FILE"),
 			Destination: &p.Settings.RegistriesFile,
 		},
 		&cli.StringFlag{
 			Name:        "auths.file",
-			Sources:     cli.EnvVars("PLUGIN_AUTHS_FILE"),
+			Sources:     cli.EnvVars("AUTHS_FILE"),
 			Destination: &p.Settings.AuthsFile,
 		},
 		&cli.StringFlag{
