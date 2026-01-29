@@ -1,3 +1,8 @@
+when:
+- event: [push, tag, manual]
+  path:
+    include: [".woodpecker/build.yaml", "go.*", "**.go", "Containerfile"]
+
 steps:
 - name: build
   image: harbor.404systems.net/library/plugin-buildah:latest
