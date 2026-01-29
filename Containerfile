@@ -11,10 +11,10 @@ RUN --mount=type=cache,target=/go-cache --mount=type=cache,target=/gomod-cache g
 FROM debian:trixie-slim
 
 ENV BUILDAH_LAYERS=true
-ENV REGISTRIES_FILE=/registries.conf
-ENV AUTHS_FILE=/auths.json
+ENV PLUGIN_REGISTRIES_FILE=/registries.conf
+ENV PLUGIN_AUTHS_FILE=/auths.json
 ENV CI_WORKSPACE="/workspace"
-ENV CONTAINERFILE="Containerfile"
+ENV PLUGIN_CONTAINERFILE="Containerfile"
 
 WORKDIR ${CI_WORKSPACE}
 
