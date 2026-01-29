@@ -80,7 +80,7 @@ func (p *Plugin) Flags() []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "context",
-			Sources:     cli.EnvVars("CI_WORKSPACE"),
+			Sources:     cli.EnvVars("PLUGIN_CONTEXT"),
 			Destination: &p.Settings.Context,
 		},
 		&cli.StringFlag{
@@ -252,7 +252,11 @@ func (p *Plugin) Execute(ctx context.Context) error {
 		buildCmd.Args = append(buildCmd.Args, "-t="+d)
 	}
 	// we need to set build context last
-	buildCmd.Args = append(buildCmd.Args, p.Settings.Context)
+	if p.Settings.Context != "" {
+		buildCmd.Args = append(buildCmd.Args, p.Settings.Context)
+	} else {
+		buildCmd.Args = append(buildCmd.Args, ".")
+	}
 
 	log.Info().Msg(fmt.Sprintf("build args: %s", strings.Join(buildCmd.Args, ", ")))
 
