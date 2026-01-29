@@ -5,7 +5,7 @@ when:
 
 steps:
 - name: build
-  image: harbor.404systems.net/library/plugin-buildah:latest
+  image: harbor.404systems.net/library/plugin-buildah:v1
   pull: true
   settings:
     registry: harbor.404systems.net
