@@ -15,6 +15,6 @@ steps:
   backend_options:
     kubernetes:
       securityContext:
-        runAsUser: 999
-        runAsGroup: 999
+        runAsUser: 1000
+        runAsGroup: 1000
         privileged: true
