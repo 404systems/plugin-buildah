@@ -1,7 +1,6 @@
 FROM golang:1.25.5 AS builder
 WORKDIR /build
-ENV GOCACHE=/go-cache
-ENV GOMODCACHE=/gomod-cache
+ENV GOCACHE=/go-cache GOMODCACHE=/gomod-cache
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/gomod-cache go mod download
 COPY main.go ./
