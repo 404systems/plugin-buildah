@@ -32,6 +32,7 @@ type Settings struct {
 	Tags           string
 	SearchRegistry string
 	CacheRepo      string
+	Retries        int
 }
 
 type Plugin struct {
@@ -124,6 +125,12 @@ func (p *Plugin) Flags() []cli.Flag {
 			Name:        "cacherepo",
 			Sources:     cli.EnvVars("PLUGIN_CACHE_REPO"),
 			Destination: &p.Settings.CacheRepo,
+		},
+		&cli.IntFlag{
+			Name:        "retries",
+			Sources:     cli.EnvVars("PLUGIN_RETRIES"),
+			Destination: &p.Settings.Retries,
+			Value:       1,
 		},
 	}
 }
@@ -233,8 +240,11 @@ func (p *Plugin) Execute(ctx context.Context) error {
 		"buildah",
 		"build",
 		"--registries-conf="+p.Settings.RegistriesFile,
-		"-f="+p.Settings.Context+"/"+p.Settings.Containerfile,
+		fmt.Sprintf("--retry=%d", p.Settings.Retries),
 	)
+	if p.Settings.Containerfile != "" {
+		buildCmd.Args = append(buildCmd.Args, "-f="+p.Settings.Containerfile)
+	}
 	if authFileExists {
 		buildCmd.Args = append(buildCmd.Args, "--authfile="+p.Settings.AuthsFile)
 	}
