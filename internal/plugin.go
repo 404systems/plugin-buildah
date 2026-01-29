@@ -228,8 +228,10 @@ func (p *Plugin) Execute(ctx context.Context) error {
 	}
 	if p.Settings.CacheRepo != "" {
 		cacheUri := p.Settings.Registry + "/" + p.Settings.CacheRepo
-		buildCmd.Args = append(buildCmd.Args, "--cache-to="+cacheUri)
 		buildCmd.Args = append(buildCmd.Args, "--cache-from="+cacheUri)
+		if !p.Settings.SkipPush {
+			buildCmd.Args = append(buildCmd.Args, "--cache-to="+cacheUri)
+		}
 	}
 	for _, d := range dests {
 		buildCmd.Args = append(buildCmd.Args, "-t="+d)
@@ -247,6 +249,11 @@ func (p *Plugin) Execute(ctx context.Context) error {
 	}
 
 	// push image
+
+	if p.Settings.SkipPush {
+		log.Info().Msg("skipping push")
+		return nil
+	}
 
 	for _, dest := range dests {
 		if err := p.pushImage(dest, authFileExists); err != nil {
