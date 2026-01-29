@@ -42,38 +42,38 @@ func (p *Plugin) Flags() []cli.Flag {
 	return []cli.Flag{
 		&cli.StringFlag{
 			Name:        "oci.repo",
-			Sources:     cli.EnvVars("REPO"),
+			Sources:     cli.EnvVars("PLUGIN_REPO"),
 			Destination: &p.Settings.Repo,
 		},
 		&cli.StringFlag{
 			Name:        "oci.registry",
-			Sources:     cli.EnvVars("REGISTRY"),
+			Sources:     cli.EnvVars("PLUGIN_REGISTRY"),
 			Usage:       "the registry to push the image to",
 			Destination: &p.Settings.Registry,
 		},
 		&cli.StringFlag{
 			Name:        "oci.registry.username",
-			Sources:     cli.EnvVars("USERNAME"),
+			Sources:     cli.EnvVars("PLUGIN_USERNAME"),
 			Destination: &p.Settings.Username,
 		},
 		&cli.StringFlag{
 			Name:        "oci.registry.password",
-			Sources:     cli.EnvVars("PASSWORD"),
+			Sources:     cli.EnvVars("PLUGIN_PASSWORD"),
 			Destination: &p.Settings.Password,
 		},
 		&cli.StringFlag{
 			Name:        "registries.file",
-			Sources:     cli.EnvVars("REGISTRIES_FILE"),
+			Sources:     cli.EnvVars("PLUGIN_REGISTRIES_FILE"),
 			Destination: &p.Settings.RegistriesFile,
 		},
 		&cli.StringFlag{
 			Name:        "auths.file",
-			Sources:     cli.EnvVars("AUTHS_FILE"),
+			Sources:     cli.EnvVars("PLUGIN_AUTHS_FILE"),
 			Destination: &p.Settings.AuthsFile,
 		},
 		&cli.StringFlag{
 			Name:        "containerfile",
-			Sources:     cli.EnvVars("CONTAINERFILE"),
+			Sources:     cli.EnvVars("PLUGIN_CONTAINERFILE"),
 			Destination: &p.Settings.Containerfile,
 		},
 		&cli.StringFlag{
@@ -83,39 +83,39 @@ func (p *Plugin) Flags() []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "target",
-			Sources:     cli.EnvVars("TARGET"),
+			Sources:     cli.EnvVars("PLUGIN_TARGET"),
 			Destination: &p.Settings.Target,
 		},
 		&cli.BoolFlag{
 			Name:        "push.skip",
-			Sources:     cli.EnvVars("SKIP_PUSH"),
+			Sources:     cli.EnvVars("PLUGIN_SKIP_PUSH"),
 			Destination: &p.Settings.SkipPush,
 		},
 		&cli.StringFlag{
 			Name:        "tags",
-			Sources:     cli.EnvVars("TAGS"),
+			Sources:     cli.EnvVars("PLUGIN_TAGS"),
 			Destination: &p.Settings.Tags,
 		},
 		&cli.BoolFlag{
 			Name:        "tags.auto",
-			Sources:     cli.EnvVars("AUTO_TAG"),
+			Sources:     cli.EnvVars("PLUGIN_AUTO_TAG"),
 			Destination: &p.Settings.AutoTag,
 		},
 		&cli.StringFlag{
 			Name:        "oci.searchregistry",
-			Sources:     cli.EnvVars("SEARCH_REGISTRY"),
+			Sources:     cli.EnvVars("PLUGIN_SEARCH_REGISTRY"),
 			Usage:       "the registry to use for pulling images",
 			Value:       "docker.io",
 			Destination: &p.Settings.SearchRegistry,
 		},
 		&cli.StringFlag{
 			Name:        "oci.searchregistry.mirror",
-			Sources:     cli.EnvVars("MIRROR"),
+			Sources:     cli.EnvVars("PLUGIN_MIRROR"),
 			Destination: &p.Settings.Mirror,
 		},
 		&cli.StringFlag{
 			Name:        "cacherepo",
-			Sources:     cli.EnvVars("CACHE_REPO"),
+			Sources:     cli.EnvVars("PLUGIN_CACHE_REPO"),
 			Destination: &p.Settings.CacheRepo,
 		},
 	}
