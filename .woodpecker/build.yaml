@@ -1,0 +1,14 @@
+steps:
+- name: build
+  image: harbor.404systems.net/library/plugin-buildah
+  settings:
+    registry: harbor.404systems.net
+    repo: library/plugin-buildah
+    username:
+      from_secret: harbor_username
+    password:
+      from_secret: harbor_password
+    tags: latest
+    auto_tag: true
+    mirror: mirror.woodpecker.svc.usmn1.internal:80
+    cache_repo: library/plugin-buildah-cache

@@ -6,6 +6,12 @@
     system: let
       pkgs = nixpkgs.legacyPackages.${system};
     in {
+      packages.default = pkgs.buildGoModule {
+        name = "plugin-buildah";
+        src = ./.;
+        vendorHash = "sha256-f5WANbL+aTgurdEpEFB3Ysh/TEQMjme/K/ckRgfZJWs=";
+        version = "0.0.1";
+      };
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
           go
