@@ -2,7 +2,7 @@ package main
 
 import (
 	"codeberg.org/woodpecker-plugins/go-plugin"
-	. "github.com/crimsonfez/plugin-buildah/internal"
+	. "github.com/404systems/plugin-buildah/internal"
 )
 
 func main() {

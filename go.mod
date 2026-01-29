@@ -1,4 +1,4 @@
-module github.com/crimsonfez/plugin-buildah
+module github.com/404systems/plugin-buildah
 
 go 1.25.5
 
