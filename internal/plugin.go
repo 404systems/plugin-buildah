@@ -27,6 +27,7 @@ type Settings struct {
 	Context        string
 	Target         string
 	SkipPush       bool
+	SkipBuild      bool
 	AutoTag        bool
 	Tags           string
 	SearchRegistry string
@@ -90,6 +91,11 @@ func (p *Plugin) Flags() []cli.Flag {
 			Name:        "push.skip",
 			Sources:     cli.EnvVars("PLUGIN_SKIP_PUSH"),
 			Destination: &p.Settings.SkipPush,
+		},
+		&cli.BoolFlag{
+			Name:        "skip.build",
+			Sources:     cli.EnvVars("PLUGIN_SKIP_BUILD"),
+			Destination: &p.Settings.SkipBuild,
 		},
 		&cli.StringFlag{
 			Name:        "tags",
@@ -241,11 +247,15 @@ func (p *Plugin) Execute(ctx context.Context) error {
 
 	log.Info().Msg(fmt.Sprintf("build args: %s", strings.Join(buildCmd.Args, ", ")))
 
-	buildCmd.Stdout = os.Stdout
-	buildCmd.Stderr = os.Stderr
+	if !p.Settings.SkipBuild {
+		buildCmd.Stdout = os.Stdout
+		buildCmd.Stderr = os.Stderr
 
-	if err := buildCmd.Run(); err != nil {
-		return fmt.Errorf("failed to build image: %w", err)
+		if err := buildCmd.Run(); err != nil {
+			return fmt.Errorf("failed to build image: %w", err)
+		}
+	} else {
+		log.Info().Msg("skipping build")
 	}
 
 	// push image
