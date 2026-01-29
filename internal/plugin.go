@@ -51,6 +51,7 @@ func (p *Plugin) Flags() []cli.Flag {
 			Sources:     cli.EnvVars("PLUGIN_REGISTRY"),
 			Usage:       "the registry to push the image to",
 			Destination: &p.Settings.Registry,
+			Value:       "docker.io",
 		},
 		&cli.StringFlag{
 			Name:        "oci.registry.username",
@@ -185,6 +186,14 @@ func (p *Plugin) Execute(ctx context.Context) error {
 	authCfg := &AuthsConfig{Auths: make(map[string]Auth)}
 	authFileExists := false
 	if p.Settings.Registry != "" {
+
+		if p.Settings.Username == "" {
+			log.Warn().Msg("username was not set!")
+		}
+
+		if p.Settings.Password == "" {
+			log.Warn().Msg("password was not set!")
+		}
 
 		authStr := p.Settings.Username + ":" + p.Settings.Password
 
