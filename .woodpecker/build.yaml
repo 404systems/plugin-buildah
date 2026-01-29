@@ -1,6 +1,6 @@
 steps:
 - name: build
-  image: harbor.404systems.net/library/plugin-buildah:bff3701778eed5cff1e00696946866b20b249b08b22e81ec83c34f84c4c2e282
+  image: harbor.404systems.net/library/plugin-buildah:latest
   settings:
     registry: harbor.404systems.net
     repo: library/plugin-buildah
