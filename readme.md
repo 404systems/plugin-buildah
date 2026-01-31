@@ -1,4 +1,5 @@
 # plugin-buildah
+[![status-badge](https://woodpecker.404systems.net/api/badges/3/status.svg?events=push%2Ctag%2Cmanual)](https://woodpecker.404systems.net/repos/3)
 
 Run buildah as a woodpecker plugin.
 
