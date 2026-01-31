@@ -9,6 +9,8 @@ RUN --mount=type=cache,target=/go-cache --mount=type=cache,target=/gomod-cache g
 
 FROM quay.io/buildah/stable:v1.42
 
+LABEL org.opencontainers.image.source = "https://github.com/404systems/plugin-buildah"
+
 ENV BUILDAH_LAYERS=true BUILDAH_ISOLATION="rootless" HOME="/tmp" \
     REGISTRIES_FILE="/tmp/registries.conf" AUTHS_FILE="/tmp/auths.json"
 
