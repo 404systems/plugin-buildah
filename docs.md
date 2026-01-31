@@ -8,8 +8,10 @@ A Woodpecker CI plugin to build OCI containers.
 
 ## Privileged and non-privileged execution
 ### Privileged (default)
-With buildah, in order to get the best performance it needs access to fuse (/dev/fuse), but root is not needed.
-When running in docker, you should just need to pass through /dev/fuse to the container as a volume mount. Although I develop in podman and runtime is kubernetes, so I haven't directly tested this with docker.
+By default plugin-buildah runs with `rootless` isolation for RUN commands and uses `fuse-overlayfs` for layer storage.  
+Fuse-overlayfs requires access to `/dev/fuse`, but root is not needed. The container runs with user:group `1000:1000`, so no extra options are needed to keep it secure.
+#### Docker / Podman
+When running in docker or podman, you should just need to pass through `/dev/fuse` to the container as a volume mount.
 ```
 steps:
 - name: build
@@ -17,6 +19,10 @@ steps:
   volumes:
   - /dev/fuse:/dev/fuse
 ```
+Note: This hasn't been directly tested with docker since dev and prod run with podman and kubernetes.  
+Under podman `--privileged` is not needed, `-v /dev/fuse:/dev/fuse` is enough.
+
+#### Kubernetes
 When running in kubernetes the easiest way to allow a container to use fuse is to enable the privileged flag.
 ```
 steps:
@@ -24,7 +30,7 @@ steps:
   ...
   privileged: true
 ```
-Out of the box the container runs with user:group 1000:1000, so no extra options are needed to keep it secure.
+Lastly, you need to add `ghcr.io/404systems/plugin-buildah` to the `WOODPECKER_PLUGINS_PRIVILEGED` env variable on your Woodpecker server.
 
 ### Non-privileged
 To run the container without any system privileges, we need to change a few environment variables.  
