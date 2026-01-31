@@ -18,6 +18,8 @@ WORKDIR /workspace
 
 VOLUME [ "/workspace" ]
 
+USER 1000:1000
+
 CMD [ "/plugin-buildah" ]
 
 COPY --from=builder /build/plugin-buildah /

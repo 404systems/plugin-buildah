@@ -19,8 +19,3 @@ steps:
     mirror: mirror.woodpecker.svc.usmn1.internal:80
     cache_repo: 404systems/plugin-buildah-cache
   privileged: true
-  backend_options:
-    kubernetes:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
