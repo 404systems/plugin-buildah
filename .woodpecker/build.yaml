@@ -1,7 +1,10 @@
 when:
-- event: [push, tag, manual]
+- event: [tag, manual]
+- event: [push]
   path:
     include: [".woodpecker/build.yaml", "go.*", "**.go", "Containerfile"]
+  branch:
+  - ${CI_REPO_DEFAULT_BRANCH}
 
 steps:
 - name: build
