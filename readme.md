@@ -15,6 +15,7 @@ PLUGIN_MIRROR=mirror.woodpecker.svc.usmn1.internal:80
 PLUGIN_CACHE_REPO=404systems/plugin-buildah-cache
 PLUGIN_SKIP_PUSH=true
 PLUGIN_SKIP_BUILD=false
+BUILDAH_ISOLATION=chroot
 ```
 nu
 ```nu

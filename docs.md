@@ -10,20 +10,7 @@ A Woodpecker CI plugin to build OCI containers.
 ### Privileged (default)
 By default plugin-buildah runs with `rootless` isolation for RUN commands and uses `fuse-overlayfs` for layer storage.  
 Fuse-overlayfs requires access to `/dev/fuse`, but root is not needed. The container runs with user:group `1000:1000`, so no extra options are needed to keep it secure.
-#### Docker / Podman
-When running in docker or podman, you should just need to pass through `/dev/fuse` to the container as a volume mount.
-```
-steps:
-- name: build
-  ...
-  volumes:
-  - /dev/fuse:/dev/fuse
-```
-Note: This hasn't been directly tested with docker since dev and prod run with podman and kubernetes.  
-Under podman `--privileged` is not needed, `-v /dev/fuse:/dev/fuse` is enough.
 
-#### Kubernetes
-When running in kubernetes the easiest way to allow a container to use fuse is to enable the privileged flag.
 ```
 steps:
 - name: build
@@ -32,8 +19,29 @@ steps:
 ```
 Lastly, you need to add `ghcr.io/404systems/plugin-buildah` to the `WOODPECKER_PLUGINS_PRIVILEGED` env variable on your Woodpecker server.
 
+This is the recommended mode for running on kubernetes because in kubernetes the only easy way to allow a container to use `/dev/fuse` is by setting `privileged: true`.
+
 ### Non-privileged
-To run the container without any system privileges, we need to change a few environment variables.  
+To run the container without any system privileges, we need to change a few environment variables: BUILDAH_ISOLATION and STORAGE_DRIVER.
+
+#### BUILDAH_ISOLATION
+With buildah there are two isolation modes we care about, `rootless` and `chroot`. By default the image uses `rootless`, but that still needs some system privileges.  
+If that is an issue we can use `chroot` instead and omit `privileged: true` in our config.  
+However, our container still needs `/dev/fuse`. Under docker or podman that is easy to include.
+```
+steps:
+- name: build
+  ...
+  environment:
+    BUILDAH_ISOLATION: chroot
+  volumes:
+  - /dev/fuse:/dev/fuse
+```
+From what I understand, `chroot` is both less secure and less capable than the `rootless` (default for this image), or `oci` options. But since the build is running in a rootless container which isn't allowed any host system privileges, the security impact is negligable. Depending on your hosts OCI runtime, you may be able to run with `rootless` since some runtimes allow non-root users to use some namespacing features.  
+
+#### STORAGE_DRIVER
+If are running in a system where `/dev/fuse` isn't available, we can fall back to `vfs`.
+
 ```
 steps:
 - name: build
@@ -42,11 +50,9 @@ steps:
     BUILDAH_ISOLATION: chroot
     STORAGE_DRIVER: vfs
 ```
-This will enable buildah isolation that uses `chroot` instead of namespacing and use `vfs` for the storage layer.  
 VFS creates a complete copy on each layer operation. With a pretty basic Containerfiles you could end up with many gigabytes of layer data during runtime.  
 When running on a host which doesn't have a CoW filesystem this can be a major bottleneck.  
 On my dev laptop (BTRFS on NVME using podman) I wasn't able to reasonably tell a difference between VFS and fuse-overlay in terms of build time.  
-From what I understand, `chroot` is both less secure and less capable than the `rootless` (default for this image), or `oci` options. But since the build is running in a rootless container which isn't allowed any host system privileges, the security impact is negligable. Depending on your hosts OCI runtime, you may be able to run with `rootless` since some runtimes allow non-root users to use some namespacing features.  
 
 ## Settings
 
