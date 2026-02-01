@@ -51,7 +51,7 @@ steps:
     STORAGE_DRIVER: vfs
 ```
 VFS creates a complete copy on each layer operation. With a pretty basic Containerfiles you could end up with many gigabytes of layer data during runtime.  
-When running on a host whose filesystem supports reflink (XFS, ZFS, and BTRFS have support), vfs will automaitcally deduplicate the layers. Without reflink support you can have major performance issues.
+When running on a host whose filesystem supports reflink (XFS and BTRFS have support) (ZFS has experimental support, needs to be enabled via kernel cmd), vfs will automaitcally deduplicate the layers. Without reflink support you can have major performance issues.
 On my dev laptop (BTRFS on NVME using podman) I wasn't able to reasonably tell a difference between VFS and fuse-overlay in terms of build time.  
 
 ## Settings
