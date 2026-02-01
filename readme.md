@@ -33,6 +33,8 @@ This acts as a good test for whether or not features work correctly.
 Contributions are welcome as long as they are made in good faith and avoid using AI/LLMs/Agents to _directly_ write code.
 
 Some features that I'm looking to implement next are:
+- detect whether /dev/fuse is available and automatically fall back to vfs
+- detect whether its running with privileged mode and fall back to chroot isolation
 - Configuring multiple registry logins
 - Pushing to multiple registries/destinations
 - Outputting the built image to a file instead of pushing it
