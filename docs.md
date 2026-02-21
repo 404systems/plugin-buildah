@@ -1,5 +1,13 @@
-# Overview
-A Woodpecker CI plugin to build OCI containers.  
+---
+name: Buildah
+icon: https://raw.githubusercontent.com/404systems/plugin-buildah/refs/heads/main/icon.svg
+description: build OCI containers in privileged or non-privileged environments
+author: 404systems
+tags: [docker, podman, image, container, build]
+containerImage: ghcr.io/404systems/plugin-buildah
+containerImageUrl: https://github.com/404systems/plugin-buildah/pkgs/container/plugin-buildah
+url: https://github.com/404systems/plugin-buildah
+---
 
 ## Features
 - Run with privileged enabled or disabled (more details below)
@@ -51,7 +59,7 @@ steps:
     STORAGE_DRIVER: vfs
 ```
 VFS creates a complete copy on each layer operation. With a pretty basic Containerfiles you could end up with many gigabytes of layer data during runtime.  
-When running on a host whose filesystem supports reflink (XFS and BTRFS have support) (ZFS has experimental support, needs to be enabled via kernel cmd), vfs will automaitcally deduplicate the layers. Without reflink support you can have major performance issues.
+When running on a host whose filesystem supports reflink (XFS and BTRFS have support) (ZFS has experimental support which can be enabled via kernel cmd), vfs will automaitcally deduplicate the layers. Without reflink support you can have major performance issues.
 On my dev laptop (BTRFS on NVME using podman) I wasn't able to reasonably tell a difference between VFS and fuse-overlay in terms of build time.  
 
 ## Settings
