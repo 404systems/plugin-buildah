@@ -26,6 +26,7 @@ type Settings struct {
 	Containerfile  string
 	Context        string
 	Target         string
+	Args           string
 	SkipPush       bool
 	SkipBuild      bool
 	AutoTag        bool
@@ -88,6 +89,11 @@ func (p *Plugin) Flags() []cli.Flag {
 			Name:        "target",
 			Sources:     cli.EnvVars("PLUGIN_TARGET"),
 			Destination: &p.Settings.Target,
+		},
+		&cli.StringFlag{
+			Name:        "args",
+			Sources:     cli.EnvVars("PLUGIN_ARGS"),
+			Destination: &p.Settings.Args,
 		},
 		&cli.BoolFlag{
 			Name:        "skip.push",
@@ -152,6 +158,25 @@ type AuthsConfig struct {
 
 type Auth struct {
 	Auth string `json:"auth"`
+}
+
+func parseBuildTimeArgs(raw string) (map[string]string, error) {
+	m := map[string]string{}
+	if err := json.Unmarshal([]byte(raw), &m); err != nil {
+		return nil, fmt.Errorf("failed to parse build time args: %w", err)
+	}
+
+	// ensure that strings are quoted
+	for k, v := range m {
+		if !strings.HasPrefix(v, `"`) {
+			v = `"` + v
+		}
+		if !strings.HasSuffix(v, `"`) {
+			v = v + `"`
+		}
+		m[k] = v
+	}
+	return m, nil
 }
 
 func (p *Plugin) Execute(ctx context.Context) error {
@@ -258,9 +283,21 @@ func (p *Plugin) Execute(ctx context.Context) error {
 			buildCmd.Args = append(buildCmd.Args, "--cache-to="+cacheUri)
 		}
 	}
+
+	if p.Settings.Args != "" {
+		args, err := parseBuildTimeArgs(p.Settings.Args)
+		if err != nil {
+			return err
+		}
+		for k, v := range args {
+			buildCmd.Args = append(buildCmd.Args, "--build-arg="+k+"="+v)
+		}
+	}
+
 	for _, d := range dests {
 		buildCmd.Args = append(buildCmd.Args, "-t="+d)
 	}
+
 	// we need to set build context last
 	if p.Settings.Context != "" {
 		buildCmd.Args = append(buildCmd.Args, p.Settings.Context)

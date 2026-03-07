@@ -81,6 +81,18 @@ On my dev laptop (BTRFS on NVME using podman) I wasn't able to reasonably tell a
 | `skip_push`       | _none_      | enabling this will skip pushing layer cache or result images                                                                                       |
 | `skip_build`      | _none_      | enabling this will skip building, but computed buildah arguments will still be shown                                                               |
 | `retries`         | `1`         | sets the number of additional attempts to make when pulling an image or layer                                                                      |
+| `args`            | _none_      | set build arguments                                                                                                                                |
+
+### Build Args Example
+```
+- name: build-with-args
+  ...
+  settings:
+    args:
+      VERSION: ${CI_COMMIT_TAG=devel}
+      COMMIT: ${CI_COMMIT_SHA:0:7}
+      FOO: bar
+```
 
 ## Additional Environment Variables
 
