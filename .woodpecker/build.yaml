@@ -8,7 +8,7 @@ when:
 
 steps:
 - name: build
-  image: ghcr.io/404systems/plugin-buildah:v1
+  image: ghcr.io/404systems/plugin-buildah:latest
   pull: true
   settings:
     registry: ghcr.io
@@ -18,6 +18,9 @@ steps:
     password:
       from_secret: ghcr_password
     tags: latest
+    args:
+      VERSION: ${CI_COMMIT_TAG=devel}
+      COMMIT: ${CI_COMMIT_SHA:0:7}
     auto_tag: true
     mirror: mirror.woodpecker.svc.usmn1.internal:80
     cache_repo: 404systems/plugin-buildah-cache

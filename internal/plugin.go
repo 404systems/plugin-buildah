@@ -180,6 +180,7 @@ func parseBuildTimeArgs(raw string) (map[string]string, error) {
 }
 
 func (p *Plugin) Execute(ctx context.Context) error {
+	log.Info().Msg(fmt.Sprintf("%s - version %s", p.App.Name, p.App.Version))
 	log.Debug().Msg("starting execution")
 	// setup registries.conf
 	cfg := RegistriesConfig{
