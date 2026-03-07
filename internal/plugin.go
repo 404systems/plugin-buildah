@@ -306,7 +306,7 @@ func (p *Plugin) Execute(ctx context.Context) error {
 		buildCmd.Args = append(buildCmd.Args, ".")
 	}
 
-	log.Info().Msg(fmt.Sprintf("build args: %s", strings.Join(buildCmd.Args, ", ")))
+	log.Info().Msg(fmt.Sprintf("build command: %s", strings.Join(buildCmd.Args, " ")))
 
 	if !p.Settings.SkipBuild {
 		buildCmd.Stdout = os.Stdout
@@ -340,7 +340,7 @@ func (p *Plugin) pushImage(dest string, useAuthFile bool) error {
 	}
 	pushCmd.Args = append(pushCmd.Args, dest)
 
-	log.Info().Msg(fmt.Sprintf("push args: %s", strings.Join(pushCmd.Args, ", ")))
+	log.Info().Msg(fmt.Sprintf("push command: %s", strings.Join(pushCmd.Args, " ")))
 
 	if p.Settings.SkipPush {
 		log.Info().Msg("skipping push")
