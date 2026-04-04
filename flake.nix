@@ -13,9 +13,11 @@
         version = "0.0.1";
       };
       devShells.default = pkgs.mkShell {
+        hardeningDisable = [ "fortify" "fortify3" ];
         packages = with pkgs; [
           go
           woodpecker-cli
+          delve
         ];
       };
     }

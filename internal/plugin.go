@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"codeberg.org/woodpecker-plugins/go-plugin"
@@ -160,23 +161,31 @@ type Auth struct {
 	Auth string `json:"auth"`
 }
 
-func parseBuildTimeArgs(raw string) (map[string]string, error) {
-	m := map[string]string{}
-	if err := json.Unmarshal([]byte(raw), &m); err != nil {
-		return nil, fmt.Errorf("failed to parse build time args: %w", err)
+type buildTimeArgValue string
+
+func (f *buildTimeArgValue) UnmarshalJSON(data []byte) error {
+	src := string(data)
+	unq, err := strconv.Unquote(src)
+	if err == nil {
+		*f = buildTimeArgValue(unq)
+		return nil
 	}
 
-	// ensure that strings are quoted
-	for k, v := range m {
-		if !strings.HasPrefix(v, `"`) {
-			v = `"` + v
-		}
-		if !strings.HasSuffix(v, `"`) {
-			v = v + `"`
-		}
-		m[k] = v
+	*f = buildTimeArgValue(src)
+	return nil
+}
+
+func parseBuildTimeArgs(raw string) (map[string]string, error) {
+	m := map[string]buildTimeArgValue{}
+	if err := json.Unmarshal([]byte(raw), &m); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal: %w", err)
 	}
-	return m, nil
+
+	result := make(map[string]string, len(m))
+	for k, v := range m {
+		result[k] = string(v)
+	}
+	return result, nil
 }
 
 func (p *Plugin) Execute(ctx context.Context) error {
@@ -291,7 +300,7 @@ func (p *Plugin) Execute(ctx context.Context) error {
 			return err
 		}
 		for k, v := range args {
-			buildCmd.Args = append(buildCmd.Args, "--build-arg="+k+"="+v)
+			buildCmd.Args = append(buildCmd.Args, fmt.Sprintf("--build-arg=%s=%q", k, v))
 		}
 	}
 
