@@ -74,7 +74,7 @@ On my dev laptop (BTRFS on NVME using podman) I wasn't able to reasonably tell a
 | `context`         | `.`         | sets the build context                                                                                                                             |
 | `target`          | _none_      | sets the build target                                                                                                                              |
 | `tags`            | _none_      | sets the tags that will be added to the image                                                                                                      |
-| `auto_tag`        | _none_      | automatically add the git tag as a tag on the image. if the git tag is a semver then it will also add tags for the major version and minor version |
+| `auto_tag`        | false       | Parse the git tag as a semver. Requires that the tag format be 'v1.2.3' in order for the major (v1) and minor (v1.2) versions to be added as tags. |
 | `search_registry` | `docker.io` | sets the registry that will be searched when no registry is supplied in an image name                                                              |
 | `mirror`          | _none_      | sets the mirror that will be used for the search registry                                                                                          |
 | `cache_repo`      | _none_      | sets the repo in the`registry` that will be used for layer caching                                                                                 |
