@@ -1,6 +1,9 @@
 FROM golang:1.25.5 AS builder
 WORKDIR /build
 ENV GOCACHE=/go-cache GOMODCACHE=/gomod-cache
+ARG VERSION
+ARG COMMIT
+
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/gomod-cache go mod download
 COPY main.go ./
@@ -8,8 +11,6 @@ COPY internal/ ./internal/
 RUN --mount=type=cache,target=/go-cache \
     --mount=type=cache,target=/gomod-cache \
     go test ./...
-ARG VERSION
-ARG COMMIT
 RUN --mount=type=cache,target=/go-cache \
     --mount=type=cache,target=/gomod-cache \
     echo "Building - Version: ${VERSION}, Commit: ${COMMIT}" && go build -ldflags "-X main.version=${VERSION} -X main.commit=${COMMIT}" .
