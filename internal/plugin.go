@@ -259,7 +259,19 @@ func (p *Plugin) Execute(ctx context.Context) error {
 	// set tags
 
 	tags := strings.Split(p.Settings.Tags, ",")
-	tags = append(tags, p.generateTags()...)
+	if p.Settings.AutoTag {
+		ciCommitTag, found := os.LookupEnv("CI_COMMIT_TAG")
+		if found {
+			st, err := semverTags(ciCommitTag)
+			if err != nil {
+				log.Warn().Msg(fmt.Sprintf("failed to parse version info from CI_COMMIT_TAG %q: %s", ciCommitTag, err.Error()))
+				tags = append(tags, ciCommitTag)
+			} else {
+				tags = append(tags, st...)
+			}
+		}
+	}
+
 	if len(tags) == 0 {
 		tags = append(tags, "latest")
 	}
