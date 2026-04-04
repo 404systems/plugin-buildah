@@ -5,6 +5,8 @@ Run buildah as a woodpecker plugin.
 
 Disclaimer: This project is not officially associated with or endorsed by the buildah project. 
 
+[Usage Documentation](docs.md)
+
 ## Development
 You can test the image by creating an env file with your settings.
 ```
